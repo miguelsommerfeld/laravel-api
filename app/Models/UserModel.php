@@ -10,10 +10,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password'])]
-#[Hidden(['password', 'remember_token'])]
+#[Fillable(['username', 'email', 'password', 'access_token', 'refresh_token'])]
+#[Hidden(['password'])]
 class UserModel extends Authenticatable
 {
+    protected $table = 'tb_users';
+    public $timestamps = false;
+
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
@@ -25,8 +28,9 @@ class UserModel extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'password'   => 'hashed'
+            // 'created_at' => 'datetime',
+            // 'updated_at' => 'datetime',
         ];
     }
 }

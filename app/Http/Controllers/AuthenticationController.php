@@ -15,8 +15,12 @@ class AuthenticationController extends Controller
         $this->userService = app(UserService::class);
     }
 
-    public function register(UserRegisterRequest $request): void
+    public function register(UserRegisterRequest $request)
     {
-        //
+        if ($response = $this->userService->signUp($request)) {
+            $data = $response['data'] ?? $response['message'];
+
+            return response()->json($data, $response['status']);
+        }
     }
 }
