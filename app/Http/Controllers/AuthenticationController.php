@@ -1,9 +1,10 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UserRegisterRequest;
-use Illuminate\Http\Request;
+use App\Http\Requests\AuthRequest;
+use Illuminate\Http\JsonResponse;
 use App\Services\UserService;
 
 class AuthenticationController extends Controller
@@ -15,12 +16,26 @@ class AuthenticationController extends Controller
         $this->userService = app(UserService::class);
     }
 
-    public function register(UserRegisterRequest $request)
+    // ACREDITO QUE DÊ PARA UTILIZAR UMA INTERFACE NESSES DOIS MÉTODOS, PORQUE POSSUEM A MESMA LÓGICA.
+    public function signUp(AuthRequest $request): JsonResponse
     {
-        if ($response = $this->userService->signUp($request)) {
-            $data = $response['data'] ?? $response['message'];
+        $response = $this->userService->register($request);
 
-            return response()->json($data, $response['status']);
+        if (!empty($response['data'])) {
+            return response()->json($response['data'], $response['status']);
         }
+
+        return response()->json($response['message'], $response['status']);
+    }
+
+    public function signIn(AuthRequest $request): JsonResponse
+    {
+        $response = $this->userService->logIn($request);
+
+        if (!empty($response['data'])) {
+            return response()->json($response['data'], $response['status']);
+        }
+
+        return response()->json($response['message'], $response['status']);
     }
 }

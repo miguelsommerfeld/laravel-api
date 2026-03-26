@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserRegisterRequest extends FormRequest
+class AuthRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,10 +22,16 @@ class UserRegisterRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'username' => 'required|min:3',
+        $rules = [
+            'username' => 'required|min:3|max:50',
             'email'    => 'required|min:10',
-            'password' => 'required|min:8'
+            'password' => 'required|min:8|max:18'
         ];
+
+        if ($this->route()->uri() === 'authentication/signin') {
+            unset($rules['username']);
+        }
+
+        return $rules;
     }
 }

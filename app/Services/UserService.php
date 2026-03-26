@@ -1,8 +1,9 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Http\Requests\UserRegisterRequest;
+use App\Http\Requests\AuthRequest;
 use App\Models\UserModel;
 use App\Services\JsonWebTokenService;
 
@@ -16,7 +17,7 @@ class UserService {
         $this->jsonWebTokenService = app(JsonWebTokenService::class);
     }
 
-    public function signUp(UserRegisterRequest $user): array
+    public function register(AuthRequest $user): array
     {
         if ($this->userModel->where('email', $user->email)->exists()) {
             return [
@@ -36,8 +37,8 @@ class UserService {
 
             // CRIAÇÃO DO JWT PARA CADASTRAR NO BANCO E RETORNAR AO CONTROLLER
             $jwt = [
-                'access_token'  => $this->jsonWebTokenService->gerarJWTLogin(1200, $userId, $user->email), // 20 MINUTOS
-                'refresh_token' => $this->jsonWebTokenService->gerarJWTLogin(86400, $userId, $user->email) // 24 HORAS
+                'access_token'  => $this->jsonWebTokenService->gerarJWT(1200, $userId, $user->email), // 20 MINUTOS
+                'refresh_token' => $this->jsonWebTokenService->gerarJWT(86400, $userId, $user->email) // 24 HORAS
             ];
 
             // ATUALIZANDO CAMPOS DE TOKEN DO USUÁRIO
@@ -55,7 +56,36 @@ class UserService {
         ];
     }
 
-    public function updateUserData(string $userId, array $data): bool|string
+    public function logIn(AuthRequest $request): array
+    {
+        $userData = $this->userModel->select(['id', 'email', 'password'])->where('email', $request->email)->first();
+        
+        if ($userData->email === $request->email && password_verify($request->password, $userData->password)) {
+            $jwt = [
+                'access_token'  => $this->jsonWebTokenService->gerarJWT(1200, $userData->attributesToArray()),
+                'refresh_token' => $this->jsonWebTokenService->gerarJWT(86400, $userData->attributesToArray())
+            ];
+
+            if ($this->updateUserData($userData->id, $jwt) !== true) {
+                return [
+                    'status'  => 500,
+                    'message' => 'Falha ao logar. Tente novamente.'
+                ];
+            }
+
+            return [
+                'status' => 200,
+                'data'   => $jwt
+            ];
+        }
+
+        return [
+            'status'  => 403,
+            'message' => 'Usuário ou senha incorretos.'
+        ];
+    }
+
+    public function updateUserData(int $userId, array $data): bool|string
     {
         // SE EXISTIR UM USUÁRIO COM ESSE ID, ELE RETORNA VERDADEIRO.
         if ($this->userModel->where('id', $userId)->exists()){

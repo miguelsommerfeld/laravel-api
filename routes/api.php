@@ -7,7 +7,7 @@ use App\Http\Controllers\AuthenticationController;
 //     return $request->user();
 // })->middleware('auth:sanctum');
 
-Route::prefix('authentication')->group(function() { 
-    Route::post('signup', [AuthenticationController::class, 'register']);
-    // Route::post('/signin', [, 'login']);
+Route::prefix('authentication')->group(function() {
+    Route::post('signup', [AuthenticationController::class, 'signUp']);
+    Route::post('signin', [AuthenticationController::class, 'signIn']);
 });
