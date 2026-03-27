@@ -16,7 +16,6 @@ class AuthenticationController extends Controller
         $this->userService = app(UserService::class);
     }
 
-    // ACREDITO QUE DÊ PARA UTILIZAR UMA INTERFACE NESSES DOIS MÉTODOS, PORQUE POSSUEM A MESMA LÓGICA.
     public function signUp(AuthRequest $request): JsonResponse
     {
         $response = $this->userService->register($request);

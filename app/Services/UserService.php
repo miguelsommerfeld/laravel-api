@@ -37,8 +37,8 @@ class UserService {
 
             // CRIAÇÃO DO JWT PARA CADASTRAR NO BANCO E RETORNAR AO CONTROLLER
             $jwt = [
-                'access_token'  => $this->jsonWebTokenService->gerarJWT(1200, $userId, $user->email), // 20 MINUTOS
-                'refresh_token' => $this->jsonWebTokenService->gerarJWT(86400, $userId, $user->email) // 24 HORAS
+                'access_token'  => $this->jsonWebTokenService->generateJWT(1200, $userId, $user->email), // 20 MINUTOS
+                'refresh_token' => $this->jsonWebTokenService->generateJWT(86400, $userId, $user->email) // 24 HORAS
             ];
 
             // ATUALIZANDO CAMPOS DE TOKEN DO USUÁRIO
@@ -62,8 +62,8 @@ class UserService {
         
         if ($userData->email === $request->email && password_verify($request->password, $userData->password)) {
             $jwt = [
-                'access_token'  => $this->jsonWebTokenService->gerarJWT(1200, $userData->attributesToArray()),
-                'refresh_token' => $this->jsonWebTokenService->gerarJWT(86400, $userData->attributesToArray())
+                'access_token'  => $this->jsonWebTokenService->generateJWT(1200, $userData->attributesToArray()),
+                'refresh_token' => $this->jsonWebTokenService->generateJWT(86400, $userData->attributesToArray())
             ];
 
             if ($this->updateUserData($userData->id, $jwt) !== true) {
