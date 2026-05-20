@@ -9,12 +9,9 @@ use App\Services\UserService;
 
 class AuthenticationController extends Controller
 {
-    private UserService $userService;
-
-    public function __construct()
-    {
-        $this->userService = app(UserService::class);
-    }
+    public function __construct(
+        private UserService $userService
+    ) {}
 
     public function signUp(AuthRequest $request): JsonResponse
     {

@@ -5,7 +5,8 @@ namespace App\Services;
 
 use App\Interfaces\PaymentGatewayInterface;
 
-class GatewayManagerService {
+class GatewayManagerService
+{
     public function findGateway(string $gatewayName): PaymentGatewayInterface|\InvalidArgumentException
     {
         return match($gatewayName) {

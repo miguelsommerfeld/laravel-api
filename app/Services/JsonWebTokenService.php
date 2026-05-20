@@ -6,7 +6,8 @@ namespace App\Services;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
-class JsonWebTokenService {
+class JsonWebTokenService
+{
     final string $secret;
 
     public function __construct()

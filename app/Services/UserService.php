@@ -7,15 +7,12 @@ use App\Http\Requests\AuthRequest;
 use App\Models\UserModel;
 use App\Services\JsonWebTokenService;
 
-class UserService {
-    private UserModel $userModel;
-    protected JsonWebTokenService $jsonWebTokenService;
-
-    public function __construct()
-    {
-        $this->userModel = app(UserModel::class);
-        $this->jsonWebTokenService = app(JsonWebTokenService::class);
-    }
+class UserService
+{
+    public function __construct(
+        private UserModel $userModel,
+        protected JsonWebTokenService $jsonWebTokenService
+    ) {}
 
     public function register(AuthRequest $user): array
     {
