@@ -97,6 +97,11 @@ class UserService
         return "Usuário não encontrado.";
     }
 
+    public function returnUserId(string $email): int
+    {
+        return $this->userModel->where('email', $email)->value('id');
+    }
+
     private function formatUsername(string $username): string
     {
         if (strpos($username, ' ')) { 

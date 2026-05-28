@@ -35,7 +35,9 @@ class MercadoPagoService implements PaymentGatewayInterface
             'items'                => [$request['donation']],
             'payment_methods'      => $paymentMethods,
             'back_urls'            => $backUrls,
-            'payer'                => $request['email'],
+            'payer'                => [
+                'email' => $request['email'],
+            ],
             'statement_descriptor' => 'TESTE_TESTE_TESTE',
             'expires'              => false,
             'auto_return'          => 'approved'

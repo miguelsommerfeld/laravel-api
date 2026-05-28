@@ -13,7 +13,7 @@ class GatewayManagerService
     {
         return match($gatewayName) {
             'mercadopago' => app(MercadoPagoService::class),
-            default       => throw new InvalidPaymentGatewayException()
+            default       => throw new InvalidPaymentGatewayException(403, 'Gateway não encontrado.')
         };
     }
 }
