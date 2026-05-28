@@ -3,30 +3,34 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Interfaces\PaymentGatewayInterface;
+use InvalidArgumentException;
+
 class PaymentService
 {
     public function __construct(
         private GatewayManagerService $gatewayManager
     ) {}
 
-    public function donate(mixed $gatewayName): array
+    /*
+    *    Process the donation and expects a gateway as argument
+    *    @param array $request
+    *    @return array<string, mixed>
+    */
+    public function donate(array $request): array
     {
-        if (!is_string($gatewayName)) {
-            return [
-                'message' => 'O parâmetro "gateway" deve ser do tipo String.',
-                'status'  => 401
-            ];
-        }
+        $gateway = $this->returnGateway($request['gateway']);
+        $preference = $gateway->createPaymentPreference($request);
+        return $preference;
+    }
 
+    /*
+    *    Returns the gateway by name
+    *    @return object|array<string, mixed>
+    */
+    public function returnGateway(?string $gatewayName): PaymentGatewayInterface
+    {
         $gateway = $this->gatewayManager->findGateway($gatewayName);
-
-        if ($gateway instanceof \InvalidArgumentException) {
-            return [
-                'message' => $gateway->getMessage(),
-                'status'  => $gateway->getCode()
-            ];
-        }
-
-        return [];
+        return $gateway;
     }
 }

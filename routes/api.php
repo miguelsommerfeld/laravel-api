@@ -15,4 +15,9 @@ Route::prefix('authentication')->group(function() {
 
 Route::prefix('donation')->group(function() {
     Route::post('/', [DonationController::class, 'donate']);
+
+    Route::prefix('back_url')->group(function() {
+        Route::get('success', fn () => true);
+        Route::get('failure', fn () => false);
+    }); 
 });

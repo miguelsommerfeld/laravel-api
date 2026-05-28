@@ -15,7 +15,7 @@ class DonationController extends Controller
 
     public function donate(Request $request): JsonResponse
     {
-        $response = $this->payment->donate($request->gateway);
+        $response = $this->payment->donate($request->request->all());
 
         if (!empty($response['data'])) {
             return response()->json($response['data'], $response['status']);

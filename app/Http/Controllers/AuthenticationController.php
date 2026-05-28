@@ -7,7 +7,7 @@ use App\Http\Requests\AuthRequest;
 use Illuminate\Http\JsonResponse;
 use App\Services\UserService;
 
-class AuthenticationController extends Controller
+class AuthenticationController
 {
     public function __construct(
         private UserService $userService
